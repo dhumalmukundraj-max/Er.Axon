@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self';">
+  <title>Er.Axon - Screen-Aware AI Coding Assistant</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app-window" class="app-window">
+    <!-- Top Drag Header Bar -->
+    <header class="titlebar" id="titlebar">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="url(#axon-grad)" stroke-width="2" opacity="0.6" />
+          <circle cx="12" cy="12" r="3.5" fill="#00f0ff" />
+          <path d="M12 3V8.5M12 15.5V21M3 12H8.5M15.5 12H21" stroke="#00f0ff" stroke-width="1.8"
+            stroke-linecap="round" />
+          <circle cx="12" cy="3" r="1.5" fill="#00f0ff" />
+          <circle cx="12" cy="21" r="1.5" fill="#00f0ff" />
+          <circle cx="3" cy="12" r="1.5" fill="#00f0ff" />
+          <circle cx="21" cy="12" r="1.5" fill="#00f0ff" />
+          <defs>
+            <linearGradient id="axon-grad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#00f0ff" />
+              <stop offset="1" stop-color="#0066ff" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">Er.Axon</span>
+        <span class="brand-tag">AI</span>
+      </div>
+
+      <!-- Real Dynamic Status Indicator -->
+      <div class="status-indicator" id="status-indicator" title="Application Status">
+        <span class="status-dot" id="status-dot"></span>
+        <span class="status-text" id="status-text">Ready</span>
+      </div>
+
+      <!-- Window Action Controls -->
+      <div class="window-controls">
+        <button id="btn-pin" class="win-btn" title="Toggle Always on Top" aria-label="Always on top">
+          <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+            <path
+              d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.219.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z" />
+          </svg>
+        </button>
+        <button id="btn-settings-toggle" class="win-btn" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+            <path
+              d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+          </svg>
+        </button>
+        <button id="btn-minimize" class="win-btn" title="Minimize" aria-label="Minimize">
+          <svg viewBox="0 0 16 16" width="10" height="10" fill="currentColor">
+            <path d="M2 8h12v1H2z" />
+          </svg>
+        </button>
+        <button id="btn-close" class="win-btn win-btn-close" title="Close" aria-label="Close">
+          <svg viewBox="0 0 16 16" width="10" height="10" fill="currentColor">
+            <path
+              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Chat & Analysis Scroll Container -->
+    <main class="main-content" id="main-content">
+      <!-- Genuine Empty State Container -->
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon-wrap">
+          <svg viewBox="0 0 48 48" width="44" height="44" fill="none">
+            <circle cx="24" cy="24" r="20" stroke="rgba(0, 240, 255, 0.2)" stroke-width="1.5" stroke-dasharray="4 4" />
+            <path d="M24 14v20M14 24h20" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" />
+            <circle cx="24" cy="24" r="5" fill="rgba(0, 240, 255, 0.25)" stroke="#00f0ff" stroke-width="1.5" />
+          </svg>
+        </div>
+        <h2 class="empty-title">Er.Axon Error Mentor</h2>
+        <p class="empty-desc">
+          Capture your IDE, terminal, or browser error. Er.Axon identifies root causes, explains fixes in plain English, and guides verification.
+        </p>
+
+        <!-- Dynamic Setup Message when Gemini API key is missing -->
+        <div id="setup-banner" class="setup-banner hidden">
+          <div class="setup-badge">Setup Required</div>
+          <p class="setup-text">
+            A Google Gemini API key is required to analyze errors and screenshots.
+          </p>
+          <button id="btn-banner-settings" class="btn-setup-action">
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+              <path
+                d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+            </svg>
+            Configure API Key
+          </button>
+        </div>
+
+        <!-- Quick Starter Action Chips -->
+        <div class="quick-prompts">
+          <button class="chip-prompt" data-action="capture">
+            <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor">
+              <path
+                d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z" />
+              <circle cx="8" cy="9" r="2.5" />
+            </svg>
+            Snap & Diagnose Screen
+          </button>
+          <button class="chip-prompt" data-text="What does 'Cannot read properties of undefined' mean in JavaScript?">
+            JS Undefined Error
+          </button>
+          <button class="chip-prompt" data-text="How do I read and understand a terminal stack trace?">
+            Stack Trace Guide
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Stream -->
+      <div id="messages-container" class="messages-container hidden"></div>
+
+      <!-- Assistant Generating Skeleton -->
+      <div id="typing-indicator" class="typing-indicator hidden">
+        <div class="typing-avatar">
+          <span class="pulse-dot"></span>
+        </div>
+        <div class="typing-bubble">
+          <span class="wave-dot"></span>
+          <span class="wave-dot"></span>
+          <span class="wave-dot"></span>
+          <span class="typing-label">Analyzing screen & diagnosing cause...</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Attached Screenshot Preview Confirmation Banner -->
+    <div id="preview-bar" class="preview-bar hidden">
+      <div class="preview-thumb-box" id="preview-thumb-box" title="Click to inspect or crop region">
+        <img id="preview-img" class="preview-img" src="" alt="Screen capture preview" />
+        <span class="preview-badge" id="preview-source-name">Desktop</span>
+      </div>
+      <div class="preview-info">
+        <span class="preview-title" id="preview-title">Screenshot Ready</span>
+        <span class="preview-hint" id="preview-hint">Click image to inspect/crop</span>
+      </div>
+      <div class="preview-actions">
+        <button id="btn-inspect-crop" class="btn-preview-action" title="Inspect full resolution or crop error region">
+          🔍 Inspect
+        </button>
+        <button id="btn-quick-analyze" class="btn-preview-action-primary" title="Confirm and send for analysis">
+          ⚡ Analyze
+        </button>
+        <button id="btn-remove-preview" class="btn-preview-close" title="Remove screenshot">
+          <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+            <path
+              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Input Area & Compact Toolbar -->
+    <footer class="composer-container">
+      <!-- Input Row -->
+      <div class="input-row">
+        <textarea id="prompt-input" class="prompt-input" placeholder="Ask an error question or capture screen..."
+          rows="1"></textarea>
+        <button id="btn-send" class="btn-send" title="Send (Enter)" aria-label="Send message">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+            <path
+              d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26 4.055 2.58 2.58 4.055.26.41a.5.5 0 0 0 .886-.082l.18-.452L15.964.686zM6.166 8.75 3.308 6.93 13.917 2.083 6.166 8.75zm1.084 1.084L13.917 2.083l-4.847 10.609-1.82-2.858z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Compact Bottom Toolbar (Subtle, sleek, non-dominating) -->
+      <div class="toolbar-bottom" role="toolbar" aria-label="Toolbar controls">
+        <div class="toolbar-group">
+          <!-- Screen Capture Button -->
+          <button id="btn-capture" class="tool-btn" title="Capture Desktop Screen [Ctrl+S]" aria-label="Capture Screen (Ctrl+S)">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path
+                d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z" />
+              <circle cx="8" cy="9" r="2.5" />
+            </svg>
+          </button>
+
+          <!-- Source Select Trigger (Multi-screen / Window chooser) -->
+          <button id="btn-source-picker" class="tool-btn" title="Choose specific screen or window target" aria-label="Choose screen or window">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path
+                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z" />
+            </svg>
+          </button>
+
+          <!-- Automatic Detection Toggle Button -->
+          <button id="btn-autodetect" class="tool-btn"
+            title="Auto-Detect Errors: Disabled [Ctrl+D]" aria-label="Toggle Auto Error Detection (Ctrl+D)">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path d="M8 1a7 7 0 1 0 7 7A7 7 0 0 0 8 1zm0 13a6 6 0 1 1 6-6 6 6 0 0 1-6 6z" />
+              <circle cx="8" cy="8" r="2.5" fill="currentColor" />
+            </svg>
+            <span class="tool-badge-dot" id="autodetect-dot"></span>
+          </button>
+
+          <!-- Voice Control Button -->
+          <button id="btn-voice" class="tool-btn" title="Voice Input (Speech-to-text)" aria-label="Voice input">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path
+                d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+              <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <!-- Clear Chat -->
+          <button id="btn-clear-chat" class="tool-btn" title="Clear Chat History" aria-label="Clear chat history">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path
+                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+              <path fill-rule="evenodd"
+                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+            </svg>
+          </button>
+
+          <!-- Quick Settings Trigger -->
+          <button id="btn-toolbar-settings" class="tool-btn" title="Preferences & Settings [Ctrl+,]" aria-label="Open settings (Ctrl+,)">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path
+                d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Screen Source Selection Modal -->
+    <div id="sources-modal" class="modal-overlay hidden">
+      <div class="modal-box modal-box-wide">
+        <div class="modal-header">
+          <span class="modal-title">Select Capture Target</span>
+          <button id="btn-close-sources" class="modal-close">&times;</button>
+        </div>
+        <div class="sources-tabs">
+          <button id="tab-screens" class="source-tab active">Screens</button>
+          <button id="tab-windows" class="source-tab">Application Windows</button>
+        </div>
+        <div id="sources-list" class="sources-grid">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen Inspection & Region Selection Modal -->
+    <div id="inspect-modal" class="modal-overlay hidden">
+      <div class="modal-box modal-box-wide">
+        <div class="modal-header">
+          <span class="modal-title">Confirm Capture & Select Region</span>
+          <button id="btn-close-inspect" class="modal-close">&times;</button>
+        </div>
+        <div class="inspect-body">
+          <div class="inspect-canvas-container" id="inspect-container">
+            <img id="inspect-full-img" class="inspect-full-img" src="" alt="Full capture" />
+            <div id="inspect-crop-box" class="inspect-crop-box hidden"></div>
+          </div>
+          <div class="inspect-instructions">
+            <span>Tip: Drag on image to crop to error region, or leave full screen.</span>
+          </div>
+        </div>
+        <div class="inspect-footer">
+          <button id="btn-reset-crop" class="btn-subtle">Reset to Full</button>
+          <button id="btn-confirm-crop-send" class="btn-primary">Confirm & Analyze</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences & Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="#00f0ff">
+              <path
+                d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+            </svg>
+            <span class="modal-title">Er.Axon Settings</span>
+          </div>
+          <button id="btn-close-settings" class="modal-close">&times;</button>
+        </div>
+
+        <div class="settings-body">
+          <!-- Section 1: Gemini API -->
+          <div class="settings-section">
+            <label class="settings-label" for="input-api-key">Gemini API Key</label>
+            <div class="api-key-input-wrap">
+              <input type="password" id="input-api-key" class="settings-input"
+                placeholder="Paste your Gemini API key..." autocomplete="off" spellcheck="false" />
+              <button id="btn-toggle-key-mask" class="btn-input-icon" title="Toggle visibility">
+                👁️
+              </button>
+            </div>
+            <div class="api-key-actions">
+              <button id="btn-test-key" class="btn-subtle">Test Connection</button>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" class="settings-link">
+                Get free Gemini API key &rarr;
+              </a>
+            </div>
+            <div id="api-test-result" class="test-result-box hidden"></div>
+          </div>
+
+          <!-- Section 2: Model Selection -->
+          <div class="settings-section">
+            <label class="settings-label" for="select-model">AI Model</label>
+            <select id="select-model" class="settings-select">
+              <option value="gemini-2.5-flash">Gemini 2.5 Flash (Fast, Recommended)</option>
+              <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+              <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+            </select>
+          </div>
+
+          <!-- Section 3: Appearance Preferences -->
+          <div class="settings-section">
+            <div class="setting-row">
+              <label class="settings-label" for="range-opacity">Window Opacity</label>
+              <span id="opacity-val" class="setting-value-badge">95%</span>
+            </div>
+            <input type="range" id="range-opacity" class="settings-slider" min="50" max="100" value="95" />
+          </div>
+
+          <!-- Section 4: Behavior -->
+          <div class="settings-section">
+            <div class="setting-toggle-row">
+              <div>
+                <span class="setting-toggle-title">Keep Window Always on Top</span>
+                <span class="setting-toggle-desc">Float above code editors and terminals</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="check-always-on-top" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="setting-toggle-row">
+              <div>
+                <span class="setting-toggle-title">Auto-Detect Interval</span>
+                <span class="setting-toggle-desc">Background error scan frequency</span>
+              </div>
+              <select id="select-auto-interval" class="settings-select-compact">
+                <option value="10">Every 10 sec</option>
+                <option value="15" selected>Every 15 sec</option>
+                <option value="30">Every 30 sec</option>
+                <option value="60">Every 60 sec</option>
+              </select>
+            </div>
+
+            <div class="setting-toggle-row">
+              <div>
+                <span class="setting-toggle-title">Sound Alerts</span>
+                <span class="setting-toggle-desc">Audio chime when an error is detected</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="check-sound-alert" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="setting-privacy-note">
+              <span class="privacy-note-badge">🔒 Privacy & Detection Limitations</span>
+              <p class="privacy-note-text">
+                Screen monitoring uses 100% local, offline OCR and pattern detection. Screen captures are <strong>never</strong> continuously uploaded or sent to Gemini unless you inspect and confirm. Detection accuracy depends on font clarity and terminal contrast. Documentation or comments mentioning error names may occasionally produce false positives requiring review.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-save-settings" class="btn-primary">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast (for unobtrusive auto-detection / alerts) -->
+    <div id="toast" class="toast hidden" role="alert" aria-live="polite">
+      <div class="toast-icon" id="toast-icon">⚡</div>
+      <div class="toast-body">
+        <div class="toast-header-row">
+          <span class="toast-title" id="toast-title">Notification</span>
+          <span class="toast-badge hidden" id="toast-badge">Review</span>
+        </div>
+        <div class="toast-message" id="toast-message">Message text</div>
+      </div>
+      <div class="toast-actions" id="toast-actions">
+        <button id="btn-toast-inspect" class="toast-action toast-action-subtle hidden" title="Inspect captured context">Inspect</button>
+        <button id="btn-toast-action" class="toast-action hidden" title="Send to Gemini for structured troubleshooting">Send to AI</button>
+        <button id="btn-toast-pause" class="toast-action toast-action-pause hidden" title="Immediately stop monitoring">Pause</button>
+      </div>
+      <button id="btn-toast-close" class="toast-close" aria-label="Close notification">&times;</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

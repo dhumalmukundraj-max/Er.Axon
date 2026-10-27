@@ -1,0 +1,55 @@
+{
+  "name": "er-axon",
+  "version": "1.0.0",
+  "description": "Screen-aware AI coding assistant for beginner programmers powered by Gemini",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "test": "node test/test-sanity.js && node test/test-troubleshooting-logic.js && node test/test-local-detector.js",
+    "package:dir": "electron-builder --dir",
+    "package:win": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.eraxon.assistant",
+    "productName": "Er.Axon",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "keywords": [
+    "electron",
+    "gemini",
+    "ai-assistant",
+    "screen-capture",
+    "coding-assistant",
+    "developer-tools"
+  ],
+  "author": "Er.Axon Team",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^2.31.0",
+    "dotenv": "^16.4.7",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "electron": "^34.2.0",
+    "electron-builder": "^26.18.0"
+  }
+}
