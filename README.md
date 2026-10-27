@@ -212,5 +212,4 @@ npm run package:win
 
 ---
 
-## 📄 License
-MIT © 2026 Er.Axon Team
+Mukundraj Dhumal 
