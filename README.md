@@ -212,4 +212,8 @@ npm run package:win
 
 ---
 
-Mukundraj Dhumal 
+Author
+
+Mukundraj Dhumal
+
+Linkedin Profile : https://www.linkedin.com/in/mukundraj
